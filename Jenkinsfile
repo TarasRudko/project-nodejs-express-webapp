@@ -1,24 +1,18 @@
 pipeline {
-    agent any
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Running build automation'
-                sh 'gradle wrapper'
-                sh './gradlew build --no-daemon'
-                archiveArtifacts artifacts: 'dist/nodejsapp.zip'
-            }
+    agent {
+        docker {
+            Image 'node:6-alpine'
+            args '-p 3000:3000'
         }
     }
-}
-/*         stage('Build Docker Image') {
+
+        stages {
+            stage ('Build') {
            
             steps {
-                script {
-                    app = docker.build("tarasrudko/nodejsapp")
-                    app.inside {
-                        sh 'echo $(curl localhost:8080)'
-                    }
+                                
+                sh 'npm install'
+                    
                 }
             }
         }
@@ -35,26 +29,7 @@ pipeline {
                 }
             }
         }
-        stage('DeployToProduction') {
-            when {
-                branch 'master'
-            }
-            steps {
-                input 'Deploy to Production?'
-                milestone(1)
-                withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
-                    script {
-                        sh "sshpass -p '$USERPASS'  ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker pull tarasrudko/train-schedule:${env.BUILD_NUMBER}\""
-                        try {
-                            sh "sshpass -p '$USERPASS' ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker stop train-schedule\""
-                            sh "sshpass -p '$USERPASS' ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker rm train-schedule\""
-                        } catch (err) {
-                            echo: 'caught error: $err'
-                        }
-                        sh "sshpass -p '$USERPASS' ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker run --restart always --name train-schedule -p 8080:8080 -d tarasrudko/train-schedule:${env.BUILD_NUMBER}\""
-                    }
-                }
-            }
+        
         }
     }
-} */
+} 
