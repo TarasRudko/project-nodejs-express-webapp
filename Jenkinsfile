@@ -1,7 +1,7 @@
 pipeline {
    
       agent {
-         docker {
+         docker 
               image 'node:carbon'
               args '-p 3000:3000'
              }
