@@ -1,5 +1,13 @@
 pipeline {
-    
+    script{
+             def dockerHome = tool 'my_docker'
+             env.PATH = "${dockerHome}/bin:${env.PATH}"
+            }
+      agent {
+           docker {
+              image 'node:carbon'
+               args '-p 3000:3000'
+             }
 
     stages {
         
@@ -9,11 +17,7 @@ pipeline {
              def dockerHome = tool 'my_docker'
              env.PATH = "${dockerHome}/bin:${env.PATH}"
             }
-            agent {
-                docker {
-                    image 'node:carbon'
-                    args '-p 3000:3000'
-             }
+            
     }
         }
     }
