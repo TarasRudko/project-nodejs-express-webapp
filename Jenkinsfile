@@ -15,9 +15,9 @@ pipeline {
              env.PATH = "${dockerHome}/bin:${env.PATH}"
             }
             
-    }
         }
-    }
+        }
+    
         stage ('Build') {
            
             steps {
